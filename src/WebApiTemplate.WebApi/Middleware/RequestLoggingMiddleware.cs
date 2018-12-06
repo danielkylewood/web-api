@@ -10,7 +10,7 @@ namespace WebApiTemplate.WebApi.Middleware
 {
     public class RequestLoggingMiddleware
     {
-        private const string _messageTemplate = "HTTP {RequestMethod} {RequestPath} requested with content body length {ContentBodyLength} and responded {StatusCode} in {Elapsed:0.0000} ms";
+        private const string _messageTemplate = "HTTP {RequestMethod} {RequestPath} responded {StatusCode} in {Elapsed:0.0000} ms";
 
         private readonly RequestDelegate _next;
         private readonly ILogger _logger;
@@ -48,7 +48,7 @@ namespace WebApiTemplate.WebApi.Middleware
             var request = httpContext.Request;
 
             var result = _logger
-                .ForContext("RequestHeaders", request.Headers.ToDictionary(h => h.Key, h => h.Value.ToString()), destructureObjects: true)
+                .ForContext("RequestHeaders", request.Headers.ToDictionary(h => h.Key, h => h.Value.ToString()), true)
                 .ForContext("RequestHost", request.Host)
                 .ForContext("RequestProtocol", request.Protocol);
 

@@ -23,30 +23,22 @@ namespace WebApiTemplate.WebApi.Middleware
 
         public async Task Invoke(HttpContext httpContext)
         {
-            var path = httpContext.Request.Path.Value;
-            if (path.Contains("/_system/"))
-            {
-                await _next(httpContext);
-                return;
-            }
-
             var apiKey = httpContext.Request.Headers["Authorization"].ToString();
 
             if (!string.IsNullOrWhiteSpace(apiKey))
             {
-                if (!Guid.TryParse(apiKey, out var guid))
+                if (!Guid.TryParse(apiKey, out var apiKeyGuid))
                 {
-                    _logger.Warning($"Attempt to call method with api key: {apiKey}");
+                    _logger.Warning($"Attempted call to method with API key: {apiKey}.");
                     httpContext.Response.StatusCode = StatusCodes.Status401Unauthorized;
                     return;
                 }
 
-                var numberOfMatches = await _apiAuthenticationRepository.GetNumberOfMatchesByApiKey(guid);
+                var numberOfMatches = await _apiAuthenticationRepository.GetNumberOfMatchesByApiKey(apiKeyGuid);
 
                 if (numberOfMatches != 1)
                 {
-                    _logger.Warning($"{numberOfMatches} matches found for api key: {apiKey}");
-
+                    _logger.Warning($"There were {numberOfMatches} matches found for API key: {apiKey}");
                     httpContext.Response.StatusCode = StatusCodes.Status401Unauthorized;
                     return;
                 }
@@ -55,8 +47,7 @@ namespace WebApiTemplate.WebApi.Middleware
                 return;
             }
 
-            _logger.Warning($"Attempt to call method with api key: {apiKey}");
-
+            _logger.Warning($"Attempted call to method with API key: {apiKey}.");
             httpContext.Response.StatusCode = StatusCodes.Status401Unauthorized;
         }
     }

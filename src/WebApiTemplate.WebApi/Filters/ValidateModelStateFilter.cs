@@ -23,7 +23,6 @@ namespace WebApiTemplate.WebApi.Filters
 
         public void OnActionExecuted(ActionExecutedContext context)
         {
-            //do nothing as we only want actions performed prior to executing rather than after
         }
     }
 }
