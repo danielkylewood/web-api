@@ -3,11 +3,15 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.28307.136
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebApiTemplate", "WebApiTemplate\WebApiTemplate.csproj", "{D309EE4A-2AA6-49BB-A53F-9B7ACAB04A5F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WebApiTemplate.WebApi", "src\WebApiTemplate.WebApi\WebApiTemplate.WebApi.csproj", "{D309EE4A-2AA6-49BB-A53F-9B7ACAB04A5F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebApiTemplate.Tests.Unit", "WebApiTemplate.Tests.Unit\WebApiTemplate.Tests.Unit.csproj", "{B6983957-A075-47A9-AA98-39B90CC86725}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WebApiTemplate.Tests.Unit", "test\WebApiTemplate.Tests.Unit\WebApiTemplate.Tests.Unit.csproj", "{B6983957-A075-47A9-AA98-39B90CC86725}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebApiTemplate.Domain", "WebApiTemplate.Domain\WebApiTemplate.Domain.csproj", "{03D3C251-F639-49AA-A164-F37FAFD72B1F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WebApiTemplate.Domain", "src\WebApiTemplate.Domain\WebApiTemplate.Domain.csproj", "{03D3C251-F639-49AA-A164-F37FAFD72B1F}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{FFACE027-8500-4BBF-B1C8-0660EF8B5BA4}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "test", "test", "{6BC46516-0D1F-4159-8E14-93692564074B}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -30,6 +34,11 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{D309EE4A-2AA6-49BB-A53F-9B7ACAB04A5F} = {FFACE027-8500-4BBF-B1C8-0660EF8B5BA4}
+		{B6983957-A075-47A9-AA98-39B90CC86725} = {6BC46516-0D1F-4159-8E14-93692564074B}
+		{03D3C251-F639-49AA-A164-F37FAFD72B1F} = {FFACE027-8500-4BBF-B1C8-0660EF8B5BA4}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {44514471-A35B-4FB8-A7E3-6D06CCD526C0}

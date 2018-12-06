@@ -1,0 +1,23 @@
+version: "3"
+
+services:
+  webapitemplate:
+    build:
+      context: ./src/WebApiTemplate.WebApi/
+      dockerfile: Dockerfile
+    container_name: webapitemplate
+    ports:
+      - "5050:5050"
+    depends_on:
+      - database
+      
+  database:
+    build:
+      context: ./src/WebApiTemplate.Database/
+      dockerfile: Dockerfile
+    container_name: database
+    ports:
+      - 1401:1433
+    environment:
+      ACCEPT_EULA: Y
+      SA_PASSWORD: db_user
