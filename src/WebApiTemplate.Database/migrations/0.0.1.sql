@@ -20,4 +20,4 @@ CREATE TABLE dbo.ApiAuthentication
 );
 
 CREATE NONCLUSTERED INDEX IX_ApiAuthentication_ApiKey ON dbo.ApiAuthentication (ApiKey);
-CREATE NONCLUSTERED INDEX IX_Customers.ExternalCustomerReference ON dbo.Customers (ExternalCustomerReference)
+CREATE NONCLUSTERED INDEX IX_Customers_ExternalCustomerReference ON dbo.Customers (ExternalCustomerReference);

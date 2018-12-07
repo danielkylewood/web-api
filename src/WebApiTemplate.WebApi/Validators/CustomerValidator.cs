@@ -62,9 +62,9 @@ namespace WebApiTemplate.WebApi.Validators
             return canParse;
         }
 
-        private static bool IsValidExternalCustomerReference(string status)
+        private static bool IsValidExternalCustomerReference(string guid)
         {
-            var canParse = Enum.TryParse(typeof(Status), status, true, out var _);
+            var canParse = Guid.TryParse(guid, out var _);
             return canParse;
         }
     }

@@ -73,7 +73,6 @@ namespace WebApiTemplate.WebApi
 
             app.UseMiddleware<RequestLoggingMiddleware>();
             app.UseMiddleware<ApiKeyAuthenticationMiddleware>();
-            app.UseHttpsRedirection();
             app.UseMvc();
         }
 

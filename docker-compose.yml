@@ -3,9 +3,13 @@ version: "3"
 services:
   webapitemplate:
     build:
-      context: ./src/WebApiTemplate.WebApi/
-      dockerfile: Dockerfile
-    container_name: webapitemplate
+      context: .
+      dockerfile: ./src/WebApiTemplate.WebApi/Dockerfile
+    container_name: web-api-template
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_URLS=http://*:5050
+      - Database:DatabaseConnectionString=Server=database,1433;database=WEBAPITEMPLATE;uid=sa;pwd='Fbx6zA^v5Qui';MultipleActiveResultSets=True
     ports:
       - "5050:5050"
     depends_on:
@@ -17,7 +21,7 @@ services:
       dockerfile: Dockerfile
     container_name: database
     ports:
-      - 1401:1433
+      - 1433:1433
     environment:
       ACCEPT_EULA: Y
-      SA_PASSWORD: db_user
+      SA_PASSWORD: Fbx6zA^v5Qui
