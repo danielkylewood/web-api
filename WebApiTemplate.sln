@@ -13,6 +13,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{FFACE027-850
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "test", "test", "{6BC46516-0D1F-4159-8E14-93692564074B}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebApiTemplate.Tests.Integration", "test\WebApiTemplate.Tests.Integration\WebApiTemplate.Tests.Integration.csproj", "{4569B684-A3E1-4E78-A4EE-AB611767BDB4}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -31,6 +33,10 @@ Global
 		{03D3C251-F639-49AA-A164-F37FAFD72B1F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{03D3C251-F639-49AA-A164-F37FAFD72B1F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{03D3C251-F639-49AA-A164-F37FAFD72B1F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4569B684-A3E1-4E78-A4EE-AB611767BDB4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4569B684-A3E1-4E78-A4EE-AB611767BDB4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4569B684-A3E1-4E78-A4EE-AB611767BDB4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4569B684-A3E1-4E78-A4EE-AB611767BDB4}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -39,6 +45,7 @@ Global
 		{D309EE4A-2AA6-49BB-A53F-9B7ACAB04A5F} = {FFACE027-8500-4BBF-B1C8-0660EF8B5BA4}
 		{B6983957-A075-47A9-AA98-39B90CC86725} = {6BC46516-0D1F-4159-8E14-93692564074B}
 		{03D3C251-F639-49AA-A164-F37FAFD72B1F} = {FFACE027-8500-4BBF-B1C8-0660EF8B5BA4}
+		{4569B684-A3E1-4E78-A4EE-AB611767BDB4} = {6BC46516-0D1F-4159-8E14-93692564074B}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {44514471-A35B-4FB8-A7E3-6D06CCD526C0}

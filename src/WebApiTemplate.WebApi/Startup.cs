@@ -42,21 +42,7 @@ namespace WebApiTemplate.WebApi
             services.AddSingleton(Logger);
             services.AddTransient<ICustomersService, CustomersService>();
 
-            services
-                .AddMvcCore(x =>
-                {
-                    x.Filters.Add(new ValidateRequestModelFilter(new AttributedValidatorFactory()));
-                    x.Filters.Add(new ValidateRequestModelStateFilter());
-                })
-                .AddJsonFormatters(x =>
-                {
-                    x.NullValueHandling = NullValueHandling.Ignore;
-                    x.ContractResolver = new DefaultContractResolver()
-                    {
-                        NamingStrategy = new SnakeCaseNamingStrategy()
-                    };
-                })
-                .AddFluentValidation(x => x.RegisterValidatorsFromAssemblyContaining<Startup>());
+            AddServices(services);
         }
 
         public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory)
@@ -78,6 +64,13 @@ namespace WebApiTemplate.WebApi
             app.UseMvc();
         }
 
+        public void ConfigureTestingServices(IServiceCollection services)
+        {
+            services.AddOptions();
+            services.Configure<DatabaseOptions>(Configuration.GetSection("Database"));
+            AddServices(services);
+        }
+
         private static string GetHostName()
         {
             var hostName = string.Empty;
@@ -92,6 +85,25 @@ namespace WebApiTemplate.WebApi
             }
 
             return hostName;
+        }
+
+        private static void AddServices(IServiceCollection services)
+        {
+            services
+                .AddMvcCore(x =>
+                {
+                    x.Filters.Add(new ValidateRequestModelFilter(new AttributedValidatorFactory()));
+                    x.Filters.Add(new ValidateRequestModelStateFilter()); 
+                })
+                .AddJsonFormatters(x =>
+                {
+                    x.NullValueHandling = NullValueHandling.Ignore;
+                    x.ContractResolver = new DefaultContractResolver()
+                    {
+                        NamingStrategy = new SnakeCaseNamingStrategy()
+                    };
+                })
+                .AddFluentValidation(x => x.RegisterValidatorsFromAssemblyContaining<Startup>());
         }
     }
 }

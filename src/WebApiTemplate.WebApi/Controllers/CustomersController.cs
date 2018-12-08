@@ -41,7 +41,7 @@ namespace WebApiTemplate.WebApi.Controllers
             var customer = customerRequestModel.ToDomainType();
             await _customersRepository.CreateCustomer(customer);
             _logger.Information($"Created customer with external customer reference: {customer.ExternalCustomerReference}.");
-            return Ok(CustomerRequestModel.FromDomainType(customer));
+            return Created($"customers/{customer.ExternalCustomerReference}", CustomerRequestModel.FromDomainType(customer));
         }
 
         [HttpPut]
