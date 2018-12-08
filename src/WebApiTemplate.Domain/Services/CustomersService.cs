@@ -5,8 +5,10 @@ namespace WebApiTemplate.Domain.Services
 {
     public class CustomersService : ICustomersService
     {
-        public Customer UpdateCustomer(Customer customer)
+        public Customer UpdateCustomer(UpdateCustomer customer)
         {
+            // Implement business logic
+
             return new Customer(
                 customer.ExternalCustomerReference,
                 customer.FirstName,

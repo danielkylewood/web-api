@@ -6,7 +6,7 @@ using WebApiTemplate.WebApi.Models;
 
 namespace WebApiTemplate.WebApi.Validators
 {
-    public class CustomerValidator : AbstractValidator<CustomerRequest>
+    public class CustomerValidator : AbstractValidator<CustomerRequestModel>
     {
         public CustomerValidator()
         {

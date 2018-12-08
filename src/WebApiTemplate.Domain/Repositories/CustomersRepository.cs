@@ -35,13 +35,13 @@ namespace WebApiTemplate.Domain.Repositories
 
             using (var connection = await CreateConnection())
             {
-                var dto = await connection.QueryFirstOrDefaultAsync<dynamic>(sql, parameters);
+                var dto = await connection.QueryFirstOrDefaultAsync<CustomerDto>(sql, parameters);
 
                 if (dto == null)
                 {
                     return Option.None<Customer>();
                 }
-                
+
                 var customer = new Customer(
                     dto.ExternalCustomerReference,
                     dto.FirstName,
@@ -104,6 +104,7 @@ namespace WebApiTemplate.Domain.Repositories
             {
                 var parameters = new
                 {
+                    customerReference = customer.ExternalCustomerReference,
                     lastModifiedDate = customer.LastModifiedDate,
                     status = (int)customer.Status,
                     name = customer.FirstName,
@@ -114,14 +115,24 @@ namespace WebApiTemplate.Domain.Repositories
                     UPDATE [dbo].[Customers]
                     SET
                         [LastModifiedDate] = @lastModifiedDate,
-                        [Status] = @mandateState,
-                        [FirstName],
-                        [Surname]
-                    WHERE MandateReference = @MandateReference
+                        [Status] = @status,
+                        [FirstName] = @name,
+                        [Surname] = @surname
+                    WHERE ExternalCustomerReference = @customerReference
                 ";
 
                 await connection.ExecuteAsync(sql, parameters);
             }
+        }
+
+        private class CustomerDto
+        {
+            public Guid ExternalCustomerReference { get; set; }
+            public string FirstName { get; set; }
+            public string Surname { get; set; }
+            public Status Status { get; set; }
+            public DateTime CreatedDate { get; set; }
+            public DateTime? ModifiedDate { get; set; }
         }
     }
 }

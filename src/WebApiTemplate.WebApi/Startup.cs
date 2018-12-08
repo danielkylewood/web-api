@@ -1,6 +1,7 @@
 ﻿using Serilog;
 using System.Net;
 using FluentValidation.AspNetCore;
+using FluentValidation.Attributes;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -44,7 +45,8 @@ namespace WebApiTemplate.WebApi
             services
                 .AddMvcCore(x =>
                 {
-                    x.Filters.Add(new ValidateModelStateFilter());
+                    x.Filters.Add(new ValidateRequestModelFilter(new AttributedValidatorFactory()));
+                    x.Filters.Add(new ValidateRequestModelStateFilter());
                 })
                 .AddJsonFormatters(x =>
                 {

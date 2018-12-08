@@ -37,10 +37,13 @@ namespace WebApiTemplate.WebApi.Middleware
                 var log = level == LogEventLevel.Error ? LogForErrorContext(httpContext) : _logger;
                 log.Write(level, _messageTemplate, httpContext.Request.Method, httpContext.Request.Path, httpContext.Request.ContentLength ?? 0, statusCode, elapsedMs);
             }
-            catch (Exception ex)
-            {
-                LogForErrorContext(httpContext).Error(ex, _messageTemplate, httpContext.Request.Method, httpContext.Request.Path, 500, Stopwatch.GetTimestamp());
-            }
+            catch (Exception ex) when (LogException(httpContext, GetElapsedMilliseconds(start, Stopwatch.GetTimestamp()), ex)) { }
+        }
+
+        private bool LogException(HttpContext httpContext, double elapsedMs, Exception ex)
+        {
+            LogForErrorContext(httpContext).Error(ex, _messageTemplate, httpContext.Request.Method, httpContext.Request.Path, 500, elapsedMs);
+            return false;
         }
 
         private ILogger LogForErrorContext(HttpContext httpContext)

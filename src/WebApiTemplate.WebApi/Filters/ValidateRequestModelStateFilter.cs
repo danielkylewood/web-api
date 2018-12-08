@@ -1,12 +1,11 @@
 ﻿using System;
-using System.Collections.Generic;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 using WebApiTemplate.WebApi.Models;
 
 namespace WebApiTemplate.WebApi.Filters
 {
-    public class ValidateModelStateFilter : IActionFilter
+    public class ValidateRequestModelStateFilter : IActionFilter
     {
         private const string RequestInvalidErrorType = "request_invalid";
 

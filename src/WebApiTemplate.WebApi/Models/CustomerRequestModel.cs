@@ -1,16 +1,19 @@
 ﻿using System;
+using FluentValidation.Attributes;
 using WebApiTemplate.Domain.Models;
+using WebApiTemplate.WebApi.Validators;
 
 namespace WebApiTemplate.WebApi.Models
 {
-    public class CustomerRequest
+    [Validator(typeof(CustomerValidator))]
+    public class CustomerRequestModel
     {
         public string ExternalCustomerReference { get; }
         public string FirstName { get; }
         public string Surname { get; }
         public string Status { get; }
 
-        public CustomerRequest(string externalCustomerReference, string firstName, string surname, string status)
+        public CustomerRequestModel(string externalCustomerReference, string firstName, string surname, string status)
         {
             ExternalCustomerReference = externalCustomerReference;
             FirstName = firstName;
@@ -32,9 +35,9 @@ namespace WebApiTemplate.WebApi.Models
                 null);
         }
 
-        public static CustomerRequest FromDomainType(Customer customer)
+        public static CustomerRequestModel FromDomainType(Customer customer)
         {
-            return new CustomerRequest(
+            return new CustomerRequestModel(
                 customer.ExternalCustomerReference.ToString(),
                 customer.FirstName,
                 customer.Surname,
