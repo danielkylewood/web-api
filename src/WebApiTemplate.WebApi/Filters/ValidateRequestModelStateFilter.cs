@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 using WebApiTemplate.WebApi.Models;
+using BadRequestObjectResult = Microsoft.AspNetCore.Mvc.BadRequestObjectResult;
 
 namespace WebApiTemplate.WebApi.Filters
 {

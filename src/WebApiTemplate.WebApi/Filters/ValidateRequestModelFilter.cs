@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Controllers;
 using Microsoft.AspNetCore.Mvc.Filters;
 using WebApiTemplate.WebApi.Models;
+using BadRequestObjectResult = WebApiTemplate.WebApi.Models.BadRequestObjectResult;
 
 namespace WebApiTemplate.WebApi.Filters
 {
@@ -37,7 +38,7 @@ namespace WebApiTemplate.WebApi.Filters
                     {
                         var traceIdentifier = context.HttpContext.TraceIdentifier;
                         var validationError = new ValidationError(traceIdentifier, _requestModelInvalid, new[] {"request_body_required"});
-                        context.Result = new BadRequestObjectResult(validationError);
+                        context.Result = new Microsoft.AspNetCore.Mvc.BadRequestObjectResult(validationError);
                         return;
                     }
                     case null:
@@ -52,7 +53,7 @@ namespace WebApiTemplate.WebApi.Filters
 
                 var errorCodes = validationResult.Errors.Select(e => e.ErrorCode).OrderBy(x => x).ToList();
                 var errorResponse = new ValidationError(context.HttpContext.TraceIdentifier, _requestModelInvalid, errorCodes);
-                context.Result = new UnprocessableObjectResult(errorResponse);
+                context.Result = new BadRequestObjectResult(errorResponse);
             }
         }
 

@@ -43,7 +43,6 @@ namespace WebApiTemplate.Tests.Integration
             // And a 201 Created code is received
             Assert.That(response.StatusCode, Is.EqualTo(HttpStatusCode.Created));
             Assert.That(response.IsSuccessStatusCode, Is.True);
-            Assert.That(responseContent, Is.Empty);
         }
 
         [Test]
@@ -64,7 +63,7 @@ namespace WebApiTemplate.Tests.Integration
             var responseContent = await response.Content.ReadAsStringAsync();
 
             // Then we received a 422
-            Assert.That((int)response.StatusCode, Is.EqualTo(4));
+            Assert.That((int)response.StatusCode, Is.EqualTo(400));
             Assert.That(response.IsSuccessStatusCode, Is.False);
             Assert.That(responseContent, Is.Not.Empty);
 
@@ -84,7 +83,9 @@ namespace WebApiTemplate.Tests.Integration
             var existingCustomer = await ApiHelper.CreateCustomer(_testServer, ApiKeys.Valid);
 
             var model =
-                new CustomerRequestModelBuilder().WithExternalCustomerReference(existingCustomer.ToString())
+                new CustomerRequestModelBuilder()
+                    .WithValidPropertyValues()
+                    .WithExternalCustomerReference(existingCustomer.ToString())
                     .Build();
 
             // Given user with valid api key
