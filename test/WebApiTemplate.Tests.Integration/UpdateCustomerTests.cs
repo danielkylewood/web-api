@@ -1,4 +1,5 @@
-﻿using System.Net;
+﻿using System;
+using System.Net;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.TestHost;
 using NUnit.Framework;
@@ -7,6 +8,7 @@ using WebApiTemplate.Tests.Integration.Fixtures;
 using WebApiTemplate.Tests.Integration.Helpers;
 using WebApiTemplate.WebApi;
 using WebApiTemplate.WebApi.Models;
+using WebApiTemplate.WebApi.Models.Hypermedia;
 
 namespace WebApiTemplate.Tests.Integration
 {
@@ -31,7 +33,6 @@ namespace WebApiTemplate.Tests.Integration
             var model =
                 new CustomerRequestModelBuilder()
                     .WithValidPropertyValues()
-                    .WithExternalCustomerReference(customerReference.ToString())
                     .WithFirstName(updatedCustomerName)
                     .Build();
 
@@ -40,7 +41,7 @@ namespace WebApiTemplate.Tests.Integration
             var content = ApiHelper.CreateContent(model);
 
             // When I want to update a customer and the model is valid
-            var response = await httpClient.PutAsync("/customers", content);
+            var response = await httpClient.PutAsync($"/customers/{customerReference.ToString()}", content);
             var responseContent = await response.Content.ReadAsStringAsync();
 
             // Then the response must not be null
@@ -51,10 +52,12 @@ namespace WebApiTemplate.Tests.Integration
             Assert.That(response.StatusCode, Is.EqualTo(HttpStatusCode.OK));
             Assert.That(response.IsSuccessStatusCode, Is.True);
 
-            // And content is updated customer
-            var updatedCustomer = SerializerHelper.DeserializeFrom<CustomerRequestModel>(responseContent);
-            Assert.That(updatedCustomer, Is.Not.Null);
-            Assert.That(updatedCustomer.FirstName, Is.EqualTo(updatedCustomerName));
+            // Assert links
+            var responseObj = SerializerHelper.DeserializeFrom<CreatedResponse<CustomerDiscovery>>(responseContent);
+            Assert.That(responseObj, Is.Not.Null);
+
+            LinkHelper.AssertLink(responseObj.Links.Self, $"/customers/{customerReference}");
+            LinkHelper.AssertLink(responseObj.Links.CustomerUpdate, $"/customers/{customerReference}");
         }
 
         [Test]
@@ -70,7 +73,7 @@ namespace WebApiTemplate.Tests.Integration
             var content = ApiHelper.CreateContent(model);
 
             // When I want to update a customer that does not exist
-            var response = await httpClient.PutAsync("/customers", content);
+            var response = await httpClient.PutAsync($"/customers/{Guid.NewGuid().ToString()}", content);
             var responseContent = await response.Content.ReadAsStringAsync();
 
             // Then the response must not be null

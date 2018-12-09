@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using Serilog;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
@@ -9,6 +10,7 @@ using WebApiTemplate.Domain.Models;
 using WebApiTemplate.Domain.Repositories;
 using WebApiTemplate.Domain.Services;
 using WebApiTemplate.WebApi.Models;
+using WebApiTemplate.WebApi.Models.Hypermedia;
 
 namespace WebApiTemplate.WebApi.Controllers
 {
@@ -29,36 +31,38 @@ namespace WebApiTemplate.WebApi.Controllers
         [HttpPost]
         public async Task<IActionResult> Post([FromBody] CustomerRequestModel customerRequestModel)
         {
-            Guid.TryParse(customerRequestModel.ExternalCustomerReference, out var customerReference);
-            var customerOption = await _customersRepository.GetCustomerByExternalCustomerReference(customerReference);
-
-            if (customerOption.TryUnwrap(out var _))
-            {
-                _logger.Warning($"Customer already exists with external customer reference: {customerRequestModel.ExternalCustomerReference}.");
-                return Conflict();
-            }
-
             var customer = customerRequestModel.ToDomainType();
             await _customersRepository.CreateCustomer(customer);
-            _logger.Information($"Created customer with external customer reference: {customer.ExternalCustomerReference}.");
-            return Created($"customers/{customer.ExternalCustomerReference}", CustomerRequestModel.FromDomainType(customer));
+            _logger.Information($"Created customer with customer reference: {customer.CustomerReference}.");
+            
+            var links = HypermediaLinkBuilder.ForCustomerDiscovery(Url, customer.CustomerReference.ToString());
+            var customerResponseData = new Dictionary<string, string>
+                {{"customer_reference", customer.CustomerReference.ToString()}};
+            var response = new CreatedResponse<CustomerDiscovery>("customer_created", links, customerResponseData);
+
+            return Created(string.Empty, response);
         }
 
-        [HttpPut]
-        public async Task<IActionResult> Put([FromBody] CustomerRequestModel customerRequestModel)
+        [HttpPut("{customerReference}")]
+        public async Task<IActionResult> Put(string customerReference, [FromBody] CustomerRequestModel customerRequestModel)
         {
-            Guid.TryParse(customerRequestModel.ExternalCustomerReference, out var customerReference);
-            var customerOption = await _customersRepository.GetCustomerByExternalCustomerReference(customerReference);
+            if (!Guid.TryParse(customerReference, out var guid))
+            {
+                _logger.Warning($"Could not parse customer reference: {customerReference}.");
+                var errorResponse = new ValidationError("request_invalid", new List<string> { ErrorCodes.CustomerReferenceInvalid });
+                return new Models.BadRequestObjectResult(errorResponse);
+            }
 
+            var customerOption = await _customersRepository.GetCustomerByCustomerReference(guid);
             if (!customerOption.TryUnwrap(out var customer))
             {
-                _logger.Warning($"Cannot find customer with external customer reference: {customerRequestModel.ExternalCustomerReference}.");
+                _logger.Warning($"Cannot find customer with customer reference: {customerReference}.");
                 return NotFound();
             }
 
             var customertoUpdate = customerRequestModel.ToDomainType();
             var updatedCustomer = new UpdateCustomer(
-                customertoUpdate.ExternalCustomerReference,
+                customer.CustomerReference,
                 customertoUpdate.FirstName,
                 customertoUpdate.Surname,
                 customertoUpdate.Status,
@@ -67,22 +71,26 @@ namespace WebApiTemplate.WebApi.Controllers
 
             var customerToSave = _customerService.UpdateCustomer(updatedCustomer);
             await _customersRepository.UpdateCustomer(customerToSave);
-            _logger.Information($"Updated customer with external customer reference: {customer.ExternalCustomerReference}.");
-            return Ok(CustomerRequestModel.FromDomainType(customerToSave));
+            _logger.Information($"Updated customer with customer reference: {customer.CustomerReference}.");
+
+            var links = HypermediaLinkBuilder.ForCustomerDiscovery(Url, customer.CustomerReference.ToString());
+            var response = new CreatedResponse<CustomerDiscovery>("customer_updated", links);
+
+            return Ok(response);
         }
 
-        [HttpGet("{customerExternalReference}")]
-        public async Task<IActionResult> Get(string customerExternalReference)
+        [HttpGet("{customerReference}")]
+        public async Task<IActionResult> Get(string customerReference)
         {
-            if (!Guid.TryParse(customerExternalReference, out var customerReference))
+            if (!Guid.TryParse(customerReference, out var parsedCustomerReference))
                 return BadRequest();
 
-            var customerOption = await _customersRepository.GetCustomerByExternalCustomerReference(customerReference);
+            var customerOption = await _customersRepository.GetCustomerByCustomerReference(parsedCustomerReference);
 
             if (customerOption.TryUnwrap(out var customer))
                 return Ok(CustomerRequestModel.FromDomainType(customer));
             
-            _logger.Warning("Could not find customer.");
+            _logger.Warning($"Could not find customer with customer reference: {customerReference}.");
             return NotFound();
         }
     }

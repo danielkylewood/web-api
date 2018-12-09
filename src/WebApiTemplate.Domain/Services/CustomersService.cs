@@ -10,7 +10,7 @@ namespace WebApiTemplate.Domain.Services
             // Implement business logic
 
             return new Customer(
-                customer.ExternalCustomerReference,
+                customer.CustomerReference,
                 customer.FirstName,
                 customer.Surname,
                 customer.Status,

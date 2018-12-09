@@ -40,15 +40,6 @@ namespace WebApiTemplate.WebApi.Validators
                     .WithErrorCode(ErrorCodes.StatusRequired)
                 .Must(IsValidStatus)
                     .WithErrorCode(ErrorCodes.StatusInvalid);
-
-            RuleFor(x => x.ExternalCustomerReference)
-                .Cascade(CascadeMode.StopOnFirstFailure)
-                .NotNull()
-                    .WithErrorCode(ErrorCodes.ExternalCustomerReferenceRequired)
-                .NotEmpty()
-                    .WithErrorCode(ErrorCodes.ExternalCustomerReferenceRequired)
-                .Must(IsValidExternalCustomerReference)
-                    .WithErrorCode(ErrorCodes.ExternalCustomerReferenceInvalid);
         }
 
         private static bool ContainsOnlyLettersOrDigitsAndSpaces(string str)
@@ -59,12 +50,6 @@ namespace WebApiTemplate.WebApi.Validators
         private static bool IsValidStatus(string status)
         {
             var canParse = Enum.TryParse(typeof(Status), status, true, out var _);
-            return canParse;
-        }
-
-        private static bool IsValidExternalCustomerReference(string guid)
-        {
-            var canParse = Guid.TryParse(guid, out var _);
             return canParse;
         }
     }

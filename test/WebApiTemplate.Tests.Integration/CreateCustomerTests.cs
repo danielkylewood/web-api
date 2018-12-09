@@ -8,10 +8,11 @@ using WebApiTemplate.Tests.Integration.Fixtures;
 using WebApiTemplate.Tests.Integration.Helpers;
 using WebApiTemplate.WebApi;
 using WebApiTemplate.WebApi.Models;
+using WebApiTemplate.WebApi.Models.Hypermedia;
 
 namespace WebApiTemplate.Tests.Integration
 {
-    public class CreateMerchantTests
+    public class CreateCustomerTests
     {
         private TestServer _testServer;
 
@@ -46,6 +47,14 @@ namespace WebApiTemplate.Tests.Integration
             // And a 201 Created code is received
             Assert.That(response.StatusCode, Is.EqualTo(HttpStatusCode.Created));
             Assert.That(response.IsSuccessStatusCode, Is.True);
+
+            // Assert links
+            var responseObj = SerializerHelper.DeserializeFrom<CreatedResponse<CustomerDiscovery>>(responseContent);
+            Assert.That(responseObj, Is.Not.Null);
+
+            Assert.That(responseObj.ResponseData["customer_reference"], Is.Not.Empty);
+            LinkHelper.AssertLink(responseObj.Links.Self, $"/customers/{responseObj.ResponseData["customer_reference"]}");
+            LinkHelper.AssertLink(responseObj.Links.CustomerUpdate, $"/customers/{responseObj.ResponseData["customer_reference"]}");
         }
 
         [Test]
@@ -54,7 +63,7 @@ namespace WebApiTemplate.Tests.Integration
             var model =
                 new CustomerRequestModelBuilder()
                     .WithValidPropertyValues()
-                    .WithExternalCustomerReference("InvalidGuid")
+                    .WithFirstName("@InvalidName")
                     .Build();
 
             // Given user with valid api key
@@ -65,7 +74,7 @@ namespace WebApiTemplate.Tests.Integration
             var response = await httpClient.PostAsync("/customers", content);
             var responseContent = await response.Content.ReadAsStringAsync();
 
-            // Then we received a 422
+            // Then we received a 400
             Assert.That((int)response.StatusCode, Is.EqualTo(400));
             Assert.That(response.IsSuccessStatusCode, Is.False);
             Assert.That(responseContent, Is.Not.Empty);
@@ -75,38 +84,8 @@ namespace WebApiTemplate.Tests.Integration
 
             Assert.That(responseObj, Is.Not.Null);
             Assert.That(responseObj.ErrorType, Is.EqualTo("request_invalid"));
-            Assert.That(responseObj.RequestId, Is.Not.Empty);
             Assert.That(1 == responseObj.ErrorCodes.ToList().Count, Is.True);
-            Assert.That(responseObj.ErrorCodes.First(), Is.EqualTo(ErrorCodes.ExternalCustomerReferenceInvalid));
-        }
-
-        [Test]
-        public async Task Creating_Customer_That_Already_Exists_Must_Return_409_Conflict()
-        {
-            var existingCustomer = await ApiHelper.CreateCustomer(_testServer, ApiKeys.Valid);
-
-            var model =
-                new CustomerRequestModelBuilder()
-                    .WithValidPropertyValues()
-                    .WithExternalCustomerReference(existingCustomer.ToString())
-                    .Build();
-
-            // Given user with valid api key
-            var httpClient = ApiHelper.CreateHttpClient(_testServer, ApiKeys.Valid);
-            var content = ApiHelper.CreateContent(model);
-
-            // When I want to create a customer and the model is invalid
-            var response = await httpClient.PostAsync("/customers", content);
-            var responseContent = await response.Content.ReadAsStringAsync();
-
-            // Then the customer must not be created
-            Assert.That(response, Is.Not.Null);
-            Assert.That(responseContent, Is.Not.Null);
-
-            // And a 409 is returned
-            Assert.That(response.StatusCode, Is.EqualTo(HttpStatusCode.Conflict));
-            Assert.That(response.IsSuccessStatusCode, Is.False);
-            Assert.That(responseContent, Is.Empty);
+            Assert.That(responseObj.ErrorCodes.First(), Is.EqualTo(ErrorCodes.FirstNameInvalid));
         }
     }
 }

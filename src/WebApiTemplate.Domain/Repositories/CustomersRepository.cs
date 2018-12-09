@@ -14,23 +14,23 @@ namespace WebApiTemplate.Domain.Repositories
         {
         }
 
-        public async Task<Option<Customer>> GetCustomerByExternalCustomerReference(Guid externalCustomerReference)
+        public async Task<Option<Customer>> GetCustomerByCustomerReference(Guid customerReference)
         {
             var parameters = new
             {
-                externalCustomerReference
+                customerReference
             };
 
             const string sql = @"
                 SELECT
-                    [ExternalCustomerReference], 
+                    [CustomerReference], 
                     [FirstName],
                     [Surname],
                     [Status],
                     [CreatedDate],
                     [LastModifiedDate]
                 FROM [dbo].[Customers] m
-                WHERE m.ExternalCustomerReference = @externalCustomerReference
+                WHERE m.CustomerReference = @customerReference
             ";
 
             using (var connection = await CreateConnection())
@@ -43,7 +43,7 @@ namespace WebApiTemplate.Domain.Repositories
                 }
 
                 var customer = new Customer(
-                    dto.ExternalCustomerReference,
+                    dto.CustomerReference,
                     dto.FirstName,
                     dto.Surname,
                     dto.Status,
@@ -62,19 +62,19 @@ namespace WebApiTemplate.Domain.Repositories
 
         public async Task CreateCustomers(IEnumerable<Customer> customers)
         {
-            var tasks = customers.Select(account => new {
-                externalCustomerReference = account.ExternalCustomerReference,
-                firstName = account.FirstName,
-                surname = account.Surname,
-                status = account.Status,
-                createdDate = account.CreatedDate,
-                modifiedDate = account.LastModifiedDate
+            var tasks = customers.Select(customer => new {
+                customerReference = customer.CustomerReference,
+                firstName = customer.FirstName,
+                surname = customer.Surname,
+                status = customer.Status,
+                createdDate = customer.CreatedDate,
+                modifiedDate = customer.LastModifiedDate
             });
 
             const string sql = @"
                 INSERT INTO [dbo].[Customers]
                 (
-                    [ExternalCustomerReference],
+                    [CustomerReference],
                     [FirstName],
                     [Surname],
                     [Status],
@@ -83,7 +83,7 @@ namespace WebApiTemplate.Domain.Repositories
                 )
                 VALUES
                 (
-                    @externalCustomerReference,
+                    @customerReference,
                     @firstName,
                     @surname,
                     @status,
@@ -104,7 +104,7 @@ namespace WebApiTemplate.Domain.Repositories
             {
                 var parameters = new
                 {
-                    customerReference = customer.ExternalCustomerReference,
+                    customerReference = customer.CustomerReference,
                     lastModifiedDate = customer.LastModifiedDate,
                     status = (int)customer.Status,
                     name = customer.FirstName,
@@ -118,7 +118,7 @@ namespace WebApiTemplate.Domain.Repositories
                         [Status] = @status,
                         [FirstName] = @name,
                         [Surname] = @surname
-                    WHERE ExternalCustomerReference = @customerReference
+                    WHERE CustomerReference = @customerReference
                 ";
 
                 await connection.ExecuteAsync(sql, parameters);
@@ -127,7 +127,7 @@ namespace WebApiTemplate.Domain.Repositories
 
         private class CustomerDto
         {
-            public Guid ExternalCustomerReference { get; set; }
+            public Guid CustomerReference { get; set; }
             public string FirstName { get; set; }
             public string Surname { get; set; }
             public Status Status { get; set; }

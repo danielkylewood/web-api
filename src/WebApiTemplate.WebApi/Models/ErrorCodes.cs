@@ -2,8 +2,7 @@
 {
     public static class ErrorCodes
     {
-        public const string ExternalCustomerReferenceRequired = "external_customer_reference_required";
-        public const string ExternalCustomerReferenceInvalid = "external_customer_reference_invalid";
+        public const string CustomerReferenceInvalid = "customer_reference_invalid";
         
         public const string FirstNameRequired = "first_name_required";
         public const string FirstNameInvalid = "first_name_invalid";

@@ -17,7 +17,7 @@ namespace WebApiTemplate.WebApi.Filters
             if (!context.ModelState.IsValid)
             {
                 context.Result = new BadRequestObjectResult(
-                    new ValidationError(context.HttpContext.TraceIdentifier, RequestInvalidErrorType, new[] { "request_model_invalid" })
+                    new ValidationError(RequestInvalidErrorType, new[] { "request_model_invalid" })
                 );
             }
         }

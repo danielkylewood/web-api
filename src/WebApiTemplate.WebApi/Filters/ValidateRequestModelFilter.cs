@@ -36,8 +36,7 @@ namespace WebApiTemplate.WebApi.Filters
                 {
                     case null when !parameter.ParameterInfo.IsOptional:
                     {
-                        var traceIdentifier = context.HttpContext.TraceIdentifier;
-                        var validationError = new ValidationError(traceIdentifier, _requestModelInvalid, new[] {"request_body_required"});
+                        var validationError = new ValidationError(_requestModelInvalid, new[] {"request_body_required"});
                         context.Result = new Microsoft.AspNetCore.Mvc.BadRequestObjectResult(validationError);
                         return;
                     }
@@ -52,7 +51,7 @@ namespace WebApiTemplate.WebApi.Filters
                     continue;
 
                 var errorCodes = validationResult.Errors.Select(e => e.ErrorCode).OrderBy(x => x).ToList();
-                var errorResponse = new ValidationError(context.HttpContext.TraceIdentifier, _requestModelInvalid, errorCodes);
+                var errorResponse = new ValidationError(_requestModelInvalid, errorCodes);
                 context.Result = new BadRequestObjectResult(errorResponse);
             }
         }

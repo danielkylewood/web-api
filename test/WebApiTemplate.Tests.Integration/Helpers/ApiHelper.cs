@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.TestHost;
 using WebApiTemplate.Tests.Integration.Builders;
 using WebApiTemplate.WebApi.Models;
+using WebApiTemplate.WebApi.Models.Hypermedia;
 
 namespace WebApiTemplate.Tests.Integration.Helpers
 {
@@ -23,8 +24,10 @@ namespace WebApiTemplate.Tests.Integration.Helpers
             var httpClient = CreateHttpClient(testServer, apiKey);
             var content = CreateContent(customerRequestModel);
 
-            await httpClient.PostAsync("/customers", content);
-            return Guid.Parse(customerRequestModel.ExternalCustomerReference);
+            var response = await httpClient.PostAsync("/customers", content);
+            var responseContent = await response.Content.ReadAsStringAsync();
+            var createdResponse = SerializerHelper.DeserializeFrom<CreatedResponse<CustomerDiscovery>>(responseContent);
+            return Guid.Parse(createdResponse.ResponseData["customer_reference"]);
         }
 
         public static HttpClient CreateHttpClient(TestServer testServer, string authKey)

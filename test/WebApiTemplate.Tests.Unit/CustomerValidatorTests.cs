@@ -28,26 +28,15 @@ namespace WebApiTemplate.Tests.Unit
             yield return new object[]
             {
                 1,
-                new CustomerRequestModel(Guid.NewGuid().ToString(), "Name", "Surname", "Gold"),
+                new CustomerRequestModel("Name", "Surname", "Gold"),
                 true,
                 new List<string>()
             };
 
             yield return new object[]
             {
-                2,
-                new CustomerRequestModel("InvalidGuid", "Name", "Surname", "Gold"),
-                false,
-                new List<string>
-                {
-                    ErrorCodes.ExternalCustomerReferenceInvalid
-                }
-            };
-
-            yield return new object[]
-            {
                 3,
-                new CustomerRequestModel(Guid.NewGuid().ToString(), "@InvalidName", "Surname", "Gold"),
+                new CustomerRequestModel("@InvalidName", "Surname", "Gold"),
                 false,
                 new List<string>
                 {
@@ -58,7 +47,7 @@ namespace WebApiTemplate.Tests.Unit
             yield return new object[]
             {
                 4,
-                new CustomerRequestModel(Guid.NewGuid().ToString(), "Name", "£Surname", "Gold"),
+                new CustomerRequestModel("Name", "£Surname", "Gold"),
                 false,
                 new List<string>
                 {
@@ -69,7 +58,7 @@ namespace WebApiTemplate.Tests.Unit
             yield return new object[]
             {
                 5,
-                new CustomerRequestModel(Guid.NewGuid().ToString(), "Name", "Surname", "InvalidStatus"),
+                new CustomerRequestModel("Name", "Surname", "InvalidStatus"),
                 false,
                 new List<string>
                 {
@@ -80,11 +69,10 @@ namespace WebApiTemplate.Tests.Unit
             yield return new object[]
             {
                 6,
-                new CustomerRequestModel(null, _invalidLengthName, _invalidLengthName, null),
+                new CustomerRequestModel(_invalidLengthName, _invalidLengthName, null),
                 false,
                 new List<string>
                 {
-                    ErrorCodes.ExternalCustomerReferenceRequired,
                     ErrorCodes.FirstNameLengthExceeded,
                     ErrorCodes.SurnameLengthExceeded,
                     ErrorCodes.StatusRequired
@@ -94,7 +82,7 @@ namespace WebApiTemplate.Tests.Unit
             yield return new object[]
             {
                 7,
-                new CustomerRequestModel(Guid.NewGuid().ToString(), null, null, "Gold"),
+                new CustomerRequestModel(null, null, "Gold"),
                 false,
                 new List<string>
                 {

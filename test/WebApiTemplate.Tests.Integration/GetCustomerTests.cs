@@ -45,7 +45,6 @@ namespace WebApiTemplate.Tests.Integration
             // And content is the customer
             var updatedCustomer = SerializerHelper.DeserializeFrom<CustomerRequestModel>(responseContent);
             Assert.That(updatedCustomer, Is.Not.Null);
-            Assert.That(updatedCustomer.ExternalCustomerReference, Is.EqualTo(customerReference.ToString()));
         }
 
         [Test]

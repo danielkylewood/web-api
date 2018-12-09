@@ -3,7 +3,7 @@ GO
 
 CREATE TABLE dbo.Customers(
 	CustomerId INT NOT NULL IDENTITY(1,1) PRIMARY KEY,
-	ExternalCustomerReference UNIQUEIDENTIFIER NOT NULL,
+	CustomerReference UNIQUEIDENTIFIER NOT NULL,
 	FirstName [NVARCHAR](70) NOT NULL,
 	Surname [NVARCHAR](70) NOT NULL,	
 	Status TINYINT NOT NULL,
@@ -20,4 +20,4 @@ CREATE TABLE dbo.ApiAuthentication
 );
 
 CREATE NONCLUSTERED INDEX IX_ApiAuthentication_ApiKey ON dbo.ApiAuthentication (ApiKey);
-CREATE NONCLUSTERED INDEX IX_Customers_ExternalCustomerReference ON dbo.Customers (ExternalCustomerReference);
+CREATE NONCLUSTERED INDEX IX_Customers_CustomerReference ON dbo.Customers (CustomerReference);

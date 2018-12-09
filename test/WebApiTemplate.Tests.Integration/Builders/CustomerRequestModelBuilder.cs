@@ -5,23 +5,15 @@ namespace WebApiTemplate.Tests.Integration.Builders
 {
     public class CustomerRequestModelBuilder
     {
-        private string _externalCustomerReference { get; set; }
         private string _firstName { get; set; }
         private string _surname { get; set; }
         private string _status { get; set; }
 
         public CustomerRequestModelBuilder WithValidPropertyValues()
         {
-            _externalCustomerReference = Guid.NewGuid().ToString();
             _firstName = "ValidName";
             _surname = "ValidSurname";
             _status = "Gold";
-            return this;
-        }
-
-        public CustomerRequestModelBuilder WithExternalCustomerReference(string externalCustomerReference)
-        {
-            _externalCustomerReference = externalCustomerReference;
             return this;
         }
 
@@ -46,7 +38,6 @@ namespace WebApiTemplate.Tests.Integration.Builders
         public CustomerRequestModel Build()
         {
             return new CustomerRequestModel(
-                _externalCustomerReference,
                 _firstName, 
                 _surname,
                 _status);
