@@ -3,9 +3,10 @@ using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.TestHost;
+using WebApiTemplate.Tests.Integration.Builders;
 using WebApiTemplate.WebApi.Models;
 
-namespace WebApiTemplate.Tests.Integration
+namespace WebApiTemplate.Tests.Integration.Helpers
 {
     public static class ApiHelper
     {

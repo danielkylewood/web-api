@@ -1,7 +1,7 @@
 ﻿using System;
 using WebApiTemplate.WebApi.Models;
 
-namespace WebApiTemplate.Tests.Integration
+namespace WebApiTemplate.Tests.Integration.Builders
 {
     public class CustomerRequestModelBuilder
     {

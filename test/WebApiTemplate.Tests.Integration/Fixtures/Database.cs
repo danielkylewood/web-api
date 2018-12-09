@@ -1,12 +1,11 @@
 ﻿using System.Data;
 using System.Data.SqlClient;
-using System.IO;
 using System.Threading.Tasks;
 using Dapper;
 using Microsoft.Extensions.Configuration;
 using Respawn;
 
-namespace WebApiTemplate.Tests.Integration
+namespace WebApiTemplate.Tests.Integration.Fixtures
 {
     public static class Database
     {

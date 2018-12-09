@@ -3,6 +3,9 @@ using System.Net;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.TestHost;
 using NUnit.Framework;
+using WebApiTemplate.Tests.Integration.Builders;
+using WebApiTemplate.Tests.Integration.Fixtures;
+using WebApiTemplate.Tests.Integration.Helpers;
 using WebApiTemplate.WebApi;
 using WebApiTemplate.WebApi.Models;
 

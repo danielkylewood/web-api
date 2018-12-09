@@ -1,7 +1,7 @@
 ﻿using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
 
-namespace WebApiTemplate.Tests.Integration
+namespace WebApiTemplate.Tests.Integration.Helpers
 {
     public static class SerializerHelper
     {

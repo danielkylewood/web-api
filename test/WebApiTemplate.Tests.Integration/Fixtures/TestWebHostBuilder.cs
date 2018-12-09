@@ -1,12 +1,11 @@
-﻿using Moq;
-using Serilog;
-using System.Net.Http;
-using Microsoft.AspNetCore.Hosting;
+﻿using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.DependencyInjection;
+using Moq;
+using Serilog;
 using WebApiTemplate.Domain.Configuration;
 using WebApiTemplate.Domain.Services;
 
-namespace WebApiTemplate.Tests.Integration
+namespace WebApiTemplate.Tests.Integration.Fixtures
 {
     public static class TestWebHostBuilder
     {

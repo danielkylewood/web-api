@@ -1,4 +1,4 @@
-﻿namespace WebApiTemplate.Tests.Integration
+﻿namespace WebApiTemplate.Tests.Integration.Fixtures
 {
     public static class ApiKeys
     {
