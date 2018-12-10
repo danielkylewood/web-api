@@ -3,6 +3,7 @@ using System.Net;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.TestHost;
 using NUnit.Framework;
+using WebApiTemplate.Tests.Integration.Builders;
 using WebApiTemplate.Tests.Integration.Fixtures;
 using WebApiTemplate.Tests.Integration.Helpers;
 using WebApiTemplate.WebApi;
@@ -25,7 +26,14 @@ namespace WebApiTemplate.Tests.Integration
         [Test]
         public async Task Getting_Existing_Customer_Must_Return_200_Ok()
         {
-            var customerReference = await ApiHelper.CreateCustomer(_testServer, ApiKeys.Valid);
+            var customer = new CustomerRequestModelBuilder()
+                .WithValidPropertyValues()
+                .WithFirstName("TestName")
+                .WithSurname("TestSurname")
+                .WithStatus("Gold")
+                .Build();
+
+            var customerReference = await ApiHelper.CreateCustomer(_testServer, ApiKeys.Valid, customer);
 
             // Given user with valid api key
             var httpClient = ApiHelper.CreateHttpClient(_testServer, ApiKeys.Valid);
@@ -43,8 +51,11 @@ namespace WebApiTemplate.Tests.Integration
             Assert.That(response.IsSuccessStatusCode, Is.True);
 
             // And content is the customer
-            var updatedCustomer = SerializerHelper.DeserializeFrom<CustomerRequestModel>(responseContent);
-            Assert.That(updatedCustomer, Is.Not.Null);
+            var fetchedCustomer = SerializerHelper.DeserializeFrom<CustomerRequestModel>(responseContent);
+            Assert.That(fetchedCustomer, Is.Not.Null);
+            Assert.That(fetchedCustomer.FirstName, Is.EqualTo(customer.FirstName));
+            Assert.That(fetchedCustomer.Surname, Is.EqualTo(customer.Surname));
+            Assert.That(fetchedCustomer.Status, Is.EqualTo(customer.Status));
         }
 
         [Test]

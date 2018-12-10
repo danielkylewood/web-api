@@ -37,11 +37,11 @@ namespace WebApiTemplate.Tests.Integration
             var response = await httpClient.PostAsync("/customers", content);
             var responseContent = await response.Content.ReadAsStringAsync();
 
-            // Then the customer is created
+            // Then a response is received
             Assert.That(response, Is.Not.Null);
             Assert.That(responseContent, Is.Not.Null);
 
-            // And a 201 Created code is received
+            // And a 401 unauthorized code is received
             Assert.That(response.StatusCode, Is.EqualTo(HttpStatusCode.Unauthorized));
             Assert.That(response.IsSuccessStatusCode, Is.False);
         }
