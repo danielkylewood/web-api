@@ -4,6 +4,7 @@ using FluentValidation.AspNetCore;
 using FluentValidation.Attributes;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
@@ -47,9 +48,6 @@ namespace WebApiTemplate.WebApi
 
         public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory)
         {
-            loggerFactory.AddDebug();
-            loggerFactory.AddSerilog(Logger);
-
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
@@ -87,7 +85,7 @@ namespace WebApiTemplate.WebApi
             return hostName;
         }
 
-        private static void AddServices(IServiceCollection services)
+        private void AddServices(IServiceCollection services)
         {
             services
                 .AddMvcCore(x =>
@@ -103,7 +101,15 @@ namespace WebApiTemplate.WebApi
                         NamingStrategy = new SnakeCaseNamingStrategy()
                     };
                 })
-                .AddFluentValidation(x => x.RegisterValidatorsFromAssemblyContaining<Startup>());
+                .AddFluentValidation(x => x.RegisterValidatorsFromAssemblyContaining<Startup>())
+                .SetCompatibilityVersion(CompatibilityVersion.Latest);
+
+            services.AddLogging(loggingBuilder =>
+            {
+                loggingBuilder.AddSerilog(Logger);
+                loggingBuilder.AddConsole();
+                loggingBuilder.AddDebug();
+            });
         }
     }
 }
